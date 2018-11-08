@@ -15,7 +15,7 @@ The landing page is the index.html. When people search something, JavaScript cod
 
 
 ## License
-The application can be used/modified/shared for any purposes without notice.
+This application can be used/modified/shared for any purposes without notice.
 
 ## References
 * https://docs.microsoft.com/en-us/azure/cognitive-services/text-analytics/

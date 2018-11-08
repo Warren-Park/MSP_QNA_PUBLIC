@@ -13,6 +13,15 @@ This file contains Microsoft Cognitive Text Analytics API example.
 ## Application workflow
 The landing page is the index.html. When people search something, JavaScript code in index.html analyses the given text which includes keyword extraction as well as a sentiment analysis. The result is passed to the main.html as a URL parameter.
 
+## Installation instructions
+1. Create an Azure web app
+2. Create your Github repository, and clone the contents of this repository to yours
+3. Go to the Azure web app portal
+4. Click your Azure web app
+5. Click the deployment center on the left
+6. Click Github, and follow the instructions
+7. Your web app will be published to the internet, and you will be able to access the web app.
+
 
 ## License
 This application can be used/modified/shared for any purposes without notice.

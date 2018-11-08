@@ -1,4 +1,4 @@
-# MSP_QNA_PUBLIC
+# MSP_Q&A_PUBLIC
 This web app is an example application that uses Microsoft Cognitive Text Analytics API as well as Bing Search API. This web app gives an example of how Microsoft Cognitive APIs can be used in a pure JavaScript environment, without server-side application (Not a recommended solution for real-world problems).
 
 

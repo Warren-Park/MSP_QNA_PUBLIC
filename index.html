@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MSP Q&A | Microsoft Student Partner</title>
+  <link rel="stylesheet" href="uikit-3/css/uikit.min.css" />
+  <script src="uikit-3/js/uikit.min.js"></script>
+  <script src="uikit-3/js/uikit-icons.min.js"></script>
+  <link rel="stylesheet" href="main_style.css" />
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+
+</head>
+
+
+<div>
+  <img src="img/bg.jpg" id="bg" alt="" >
+</div>
+  <body>
+
+
+    <script type="text/javascript">
+    const KEY1 = "YOUR-TEXT-ANALYTICS-KEY";
+    const KEY2 = "YOUR-TEXT-ANALYTICS-KEY";
+    const uri='YOUR-TEXT-ANALYTICS-END-POINT';
+    const SERVER_URL = ".";
+    var emoji="";
+    document.addEventListener('readystatechange', function() {
+        if (document.readyState === "complete") {
+    document.getElementById("PC_search").addEventListener("keyup",function(event){
+      event.preventDefault();
+      if(event.keyCode==13||event.which==13){
+        document.getElementById("search_btn").click();
+      }
+    });
+  }});
+
+        function processText() {
+          var sourceText = document.getElementById("PC_search").value;
+          if(sourceText==""){
+            alert("You should type something on the search bar.");
+            return 0;
+          }
+
+            // Processes sentiment analysis
+
+            var params = {
+
+                    "documents":[{
+                      "language":"en",
+                      "id":"1",
+                      "text":sourceText
+                    }]
+                };
+            var paramsg={
+                    "document":{
+                        "type":"PLAIN_TEXT",
+                          "language": "EN",
+                        "content":sourceText
+                  },
+                  "encodingType":"UTF8"
+
+            };
+
+
+                $.ajax({
+                  url: uri+"/sentiment",
+                  type: "POST",
+                  beforeSend: function(xhrObj){
+
+                      xhrObj.setRequestHeader("Content-Type","application/json");
+                      xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", KEY1);
+
+                    },
+                    data: JSON.stringify(params),
+                    dataType:"text",
+
+
+                })
+
+                .done(function(data) {
+                  console.log(data);
+
+                    var sc=JSON.parse(data).documents[0].score;
+
+                    if(sc>0.7){
+                      emoji="😀";
+                    }else if(sc>0.3){
+                      emoji="😐";
+                    }else{
+                      emoji="😭";
+                    }
+
+                    $("#sen").text(emoji);
+
+                })
+
+                .fail(function(jqXHR, textStatus, errorThrown) {
+                    // Display error message.
+                    var errorString = (errorThrown === "") ? "Error. " : errorThrown + " (" + jqXHR.status + "): ";
+                    errorString += (jqXHR.responseText === "") ? "" : jQuery.parseJSON(jqXHR.responseText).message;
+                    alert(errorString);
+                });
+
+
+            //Processes key phrases analysis
+            $.ajax({
+              url: uri+"/keyPhrases",
+              type: "POST",
+              beforeSend: function(xhrObj){
+                  // Request headers, also supports "application/octet-stream"
+
+                  xhrObj.setRequestHeader("Content-Type","application/json");
+                  xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", KEY1);
+
+                },
+                data: JSON.stringify(params),
+                dataType:"text",
+
+
+            })
+
+            .done(function(data) {
+                console.log(data);
+                console.log(JSON.parse(data).documents[0].keyPhrases);
+                while(emoji==""){
+                  console.log("Waiting for the sentiment analysis result.")
+                }
+                window.location = SERVER_URL+"/main.html?query="+JSON.parse(data).documents[0].keyPhrases+"&emoji="+emoji;
+
+
+
+            })
+
+            .fail(function(jqXHR, textStatus, errorThrown) {
+                // Display error message.
+                var errorString = (errorThrown === "") ? "Error. " : errorThrown + " (" + jqXHR.status + "): ";
+                errorString += (jqXHR.responseText === "") ? "" : jQuery.parseJSON(jqXHR.responseText).message;
+                alert(errorString);
+            });
+        };
+    </script>
+
+<div uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky">
+  <div class="uk-navbar-container" uk-navbar>
+      <div class="uk-navbar-left">
+        &nbsp;Q&A&nbsp;|&nbsp; Microsoft&nbsp;Student&nbsp;Partner
+      </div>
+      <div class="uk-navbar-right">
+
+        <ul class="uk-navbar-nav" uk-navbar>
+            <li>
+                <a href="#" uk-icon="icon: question"></a>
+                <div class="uk-navbar-dropdown">
+                    <ul class="uk-nav uk-navbar-dropdown-nav">
+                        <li><a href="./index/devs.html">About</a></li>
+                        <li><a href="https://github.com/Warren-Park/">Resources</a></li>
+                    </ul>
+                </div>
+    </div>
+</div>
+</div>
+
+
+
+
+<div uk-parallax="viewport: 0.5">
+<p></p>
+    <h1 style="color:black;" align="middle"> We are here to help you answer your question. </h1>
+
+</div>
+<p></p>
+<div align="middle">
+    <input class="uk-input uk-form-width-large" id="PC_search" type="text" placeholder="Search the cards...">
+    <button class = "uk-button-primary" id = "search_btn" onclick = "processText();">SEARCH</button>
+
+</div>
+
+
+  </body>
+
+
+</html>

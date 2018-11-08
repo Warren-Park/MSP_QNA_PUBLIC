@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Search | Microsoft Student Partner</title>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+  <link rel="stylesheet" href="uikit-3/css/uikit.min.css" />
+  <script src="uikit-3/js/uikit.js"></script>
+  <script src="uikit-3/js/uikit-icons.min.js"></script>
+  <link rel="stylesheet" href="main_style.css" />
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+
+</head>
+
+  <body>
+
+    <div uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky">
+      <div class="uk-navbar-container" uk-navbar>
+          <div class="uk-navbar-left">
+            &nbsp;Search&nbsp;|&nbsp; Microsoft&nbsp;Student&nbsp;Partner
+          </div>
+          <div class="uk-navbar-right">
+
+            <ul class="uk-navbar-nav" uk-navbar>
+                <li>
+                    <a href="./index.html" uk-icon="icon: home"></a>
+
+        </div>
+    </div>
+    </div>
+
+
+<script type="text/javascript">
+var query = "";
+var emoji="";
+var query_label;
+var emoji_label;
+
+
+//CONFIGURE THE WEB APP.
+const BingKey = 'YOUR-BING-KEY';
+const KEY2 = "YOUR-BING-KEY";
+
+
+
+
+/*######################################################################################################################################################
+
+
+
+Developed by Warren Park.
+Copyright Microsoft 2018. All rights reserved.
+
+
+
+######################################################################################################################################################
+*/
+
+
+
+
+
+
+function get_url_params(){
+  //Gets parameters from the URL.
+  var params={};
+  var search = decodeURIComponent( window.location.href.slice( window.location.href.indexOf( '?' ) + 1 ) );
+    var definitions = search.split( '&' );
+
+    definitions.forEach( function( val, key ) {
+        var parts = val.split( '=', 2 );
+        params[ parts[ 0 ] ] = parts[ 1 ];
+    } );
+    console.log(params);
+
+
+    return params;
+
+}
+
+document.addEventListener('readystatechange', function() {
+    if (document.readyState === "complete") {
+      var params=get_url_params();
+      query_label = document.getElementById("responseTextArea");
+      emoji_label = document.getElementById("sen");
+      query = params['query'];
+      emoji = params['emoji'];
+      $("#responseTextArea").text(query);
+      $("#sen").text(emoji);
+      console.log(query_label.value);
+      console.log(emoji_label.innerHTML);
+      search();
+    }
+    });
+
+function search(){
+  $.ajax({
+    url: "https://api.cognitive.microsoft.com/bing/v7.0/search?q="+decodeURIComponent(query),
+    type: "GET",
+    beforeSend: function(xhrObj){
+
+        xhrObj.setRequestHeader("Content-Type","application/json");
+        xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", BingKey);
+
+      }
+
+
+  })
+
+  .done(function(data) {
+      console.log(data);
+      //This part is adapted from http://triplegold777.blogspot.com/2016/06/how-to-use-bing-search-v5-api-with.html
+      res_length = data.webPages.value.length;
+      var result_str="";
+		  for(i=0; i<res_length; i++ ){
+		      result_str += "<a href='" + data.webPages.value[i].url + "'>&nbsp;" + data.webPages.value[i].name + "</a> &nbsp;" + data.webPages.value[i].snippet;
+		  }
+		  $('#search_content').html(result_str);
+
+  })
+
+  .fail(function(jqXHR, textStatus, errorThrown) {
+      // Display error message.
+      var errorString = (errorThrown === "") ? "Error. " : errorThrown + " (" + jqXHR.status + "): ";
+      errorString += (jqXHR.responseText === "") ? "" : jQuery.parseJSON(jqXHR.responseText).message;
+      alert(errorString);
+  });
+}
+
+
+
+
+
+
+
+</script>
+Sentiment:
+<br></br>
+<span class="uk-label" id="sen">Nothing Received</span>
+<br><br>
+Key Phrases:
+<br><br>
+<textarea class="uk-textarea" rows="1" name="responseTextArea" id="responseTextArea"> Nothing received.</textarea>
+<div id = "search_content"></div>
+  </body>
+  </html>

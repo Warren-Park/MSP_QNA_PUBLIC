@@ -19,8 +19,8 @@ The landing page is the index.html. When people search something, JavaScript cod
 3. Go to the Azure web app portal
 4. Click your Azure web app
 5. Click the deployment center on the left
-6. Click Github, and follow the instructions
-7. Your web app will be published to the internet, and you will be able to access the web app.
+6. Click the Github, and follow the instructions
+7. Your web app will be published on the internet, and you will be able to access the web app.
 
 
 ## License
